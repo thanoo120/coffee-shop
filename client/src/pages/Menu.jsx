@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect,useState } from "react";
 import {useCart} from "../context/CartContex";
-
+import cofee from "../assets/mixcofee.jpg"
 const MenuItems = () => {
     const [products, setProducts] = useState([]);
     const { addToCart } = useCart();
@@ -20,7 +20,7 @@ const MenuItems = () => {
 
      return (
     <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {products.map((product) => (
+      {/* {products.map((product) => (
         <div key={product._id} className="border rounded shadow p-4">
           <img src={product.image} alt={product.name} className="h-40 w-full object-cover mb-2 rounded" />
           <h3 className="text-xl font-bold">{product.name}</h3>
@@ -33,7 +33,11 @@ const MenuItems = () => {
             Add to Cart
           </button>
         </div>
-      ))}
+      ))} */}
+      <img src={cofee} alt="cofee" className="h-40 w-full object-cover mb-2 rounded" />
+          <h3 className="text-xl font-bold">mixcofeee</h3>
+          <p className="text-gray-600">good tase</p>
+          <p className="text-green-700 font-bold">500lkr</p>
     </div>
   );
 }

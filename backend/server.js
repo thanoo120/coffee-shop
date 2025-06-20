@@ -1,14 +1,23 @@
+const express =require('express');
 
-import express from 'express';
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import authRoutes from './routes/authRoutes.js';
-import productRoutes from './routes/productRoutes.js';
+const dotenv = require('dotenv');
+dotenv.config();
+const mongoose = require('mongoose');
+const cors = require('cors');
+const authRoutes=require('./routes/authRoutes.js');
+const productRoutes=require('./routes/productRoutes.js');
 dotenv.config();
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -20,3 +29,4 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
   .catch((err) => console.error(err));
+

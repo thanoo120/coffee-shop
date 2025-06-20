@@ -1,11 +1,11 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+const jwt = require('jsonwebtoken');
+const User = require('../model/User.js');
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
-export const registerUser = async (req, res) => {
+const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
   const userExists = await User.findOne({ email });
 
@@ -20,7 +20,7 @@ export const registerUser = async (req, res) => {
   });
 };
 
-export const loginUser = async (req, res) => {
+const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
@@ -35,3 +35,5 @@ export const loginUser = async (req, res) => {
     res.status(401).json({ message: 'Invalid credentials' });
   }
 };
+
+module.exports = { registerUser, loginUser };
