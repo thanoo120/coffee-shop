@@ -2,12 +2,11 @@ const express = require('express');
 const Product = require('../model/Product.js');
 const router = express.Router();
 const multer = require('multer');
+const {updateProduct,deleteProduct} =require('../controller/ProductController.js')
 
-// Create uploads folder if not exists (optional)
 const fs = require('fs');
 if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
 
-// Configure multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -18,15 +17,13 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ✅ Route to Add Product
 router.post('/add-product', upload.single('image'), async (req, res) => {
   try {
     const { name, price, description } = req.body;
 
-    // ⛔ check if image is missing
-    if (!req.file) {
-      return res.status(400).json({ message: 'Image file is required.' });
-    }
+  if (!req.file) {
+    return res.status(400).json({ message: 'Image file is required.' });
+  }
 
     const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
 
@@ -45,7 +42,7 @@ router.post('/add-product', upload.single('image'), async (req, res) => {
   }
 });
 
-// ✅ Route to Get All Products
+
 router.get('/all', async (req, res) => {
   try {
     const products = await Product.find();
@@ -54,5 +51,6 @@ router.get('/all', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-
+router.put('/:id',updateProduct);
+router.delete('/:id',deleteProduct);
 module.exports = router;
