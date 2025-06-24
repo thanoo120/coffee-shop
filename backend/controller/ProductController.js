@@ -44,6 +44,6 @@ const deleteProduct =async (req,res) =>{
     }
 }
 
-modue.exports={
+module.exports={
     updateProduct,deleteProduct
 }
