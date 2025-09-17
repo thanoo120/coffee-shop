@@ -7,27 +7,24 @@ const ProductList = ({ products }) => {
   const [quantity, setQuantity] = useState(1);
   const [favorites, setFavorites] = useState([]);
 
-  // Load favorites from localStorage on mount
   useEffect(() => {
     const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
     setFavorites(storedFavorites);
   }, []);
 
-  // Save favorites to localStorage whenever they change
+
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
-  const isFavorited = (product) =>
-    favorites.some((fav) => fav._id === product._id);
+  const isFavorited = (product) => favorites.includes(product._id);
 
   const toggleFavorite = (product, e) => {
-    e.stopPropagation(); // Prevent modal from opening
-    const alreadyLiked = isFavorited(product);
-    if (alreadyLiked) {
-      setFavorites(favorites.filter((item) => item._id !== product._id));
+    e.stopPropagation();
+    if (isFavorited(product)) {
+      setFavorites(favorites.filter((id) => id !== product._id));
     } else {
-      setFavorites([...favorites, product]);
+      setFavorites([...favorites, product._id]);
     }
   };
 
@@ -47,7 +44,7 @@ const ProductList = ({ products }) => {
 
   return (
     <>
-      {/* Product Grid */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {products.map((product) => (
           <div
@@ -92,9 +89,7 @@ const ProductList = ({ products }) => {
               alt={selectedProduct.name}
               className="h-40 w-full object-cover mb-4 rounded"
             />
-            <h2 className="text-2xl font-bold mb-2">
-              {selectedProduct.name}
-            </h2>
+            <h2 className="text-2xl font-bold mb-2">{selectedProduct.name}</h2>
             <p className="text-gray-600 mb-2">{selectedProduct.description}</p>
             <p className="text-green-700 font-bold mb-4">
               {selectedProduct.price} LKR
@@ -102,9 +97,7 @@ const ProductList = ({ products }) => {
 
             <div className="flex items-center mb-4">
               <button
-                onClick={() =>
-                  setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
-                }
+                onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
                 className="px-3 py-1 border rounded-l"
               >
                 -
@@ -132,24 +125,39 @@ const ProductList = ({ products }) => {
         </div>
       )}
 
-     
+      {/* Favorites Section */}
       <div className="mt-10">
         <h2 className="text-xl font-bold mb-4">Favorites</h2>
         {favorites.length === 0 ? (
           <p className="text-gray-600">No favorites yet</p>
         ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {favorites.map((product) => (
-              <li key={product._id} className="p-4 border rounded shadow">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="h-32 w-full object-cover mb-2 rounded"
-                />
-                <h3 className="font-bold">{product.name}</h3>
-                <p className="text-green-700">{product.price} LKR</p>
-              </li>
-            ))}
+            {products
+              .filter((product) => favorites.includes(product._id))
+              .map((product) => (
+                <li
+                  key={product._id}
+                  className="p-4 border rounded shadow cursor-pointer"
+                  onClick={() => openProduct(product)}
+                >
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="h-32 w-full object-cover mb-2 rounded"
+                  />
+                  <h3 className="font-bold">{product.name}</h3>
+                  <p className="text-green-700">{product.price} LKR</p>
+                  <button
+                    className="mt-2 text-red-500 text-xl"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(product, e);
+                    }}
+                  >
+                    ❤️ Remove
+                  </button>
+                </li>
+              ))}
           </ul>
         )}
       </div>
