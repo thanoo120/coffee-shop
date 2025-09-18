@@ -28,7 +28,7 @@ export default function Register() {
         <input type="text" name="name" placeholder="Name" onChange={handleChange} className="p-2 border" />
         <input type="email" name="email" placeholder="Email" onChange={handleChange} className="p-2 border" />
         <input type="password" name="password" placeholder="Password" onChange={handleChange} className="p-2 border" />
-        <button className="bg-brown-600 text-white py-2 px-4">Register</button>
+        <button className="bg-brown-600 text-black py-2 px-4">Register</button>
       </form>
     </div>
   );
